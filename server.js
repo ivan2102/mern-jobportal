@@ -12,9 +12,7 @@ import helmet from 'helmet';
 import xss from 'xss-clean';
 import mongoSanitize from 'express-mongo-sanitize';
 
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
-import path from 'path';
+
 
 //routers
 import authRoutes from './routes/authRoutes.js';
@@ -30,10 +28,7 @@ if(process.env.NODE_ENV !== 'production') {
     app.use(morgan('dev'))
 }
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
 
-//build production
-app.use(express.static(path.resolve(__dirname, './client/build')))
 
 
 app.use(express.json())
@@ -41,21 +36,31 @@ app.use(helmet())
 app.use(xss())
 app.use(mongoSanitize())
 
-app.get('/', (req, res) => {
-    res.send('Welcome')
-})
+
 
 //routes middleware
 app.use('/api/auth', authRoutes)
 app.use('/api/jobs', authUser, jobsRoutes)
 
-app.get('*', (req, res) => {
 
-    res.sendFile(path.resolve(__dirname, './client/build', 'index.html'))
-})
 
 app.use(notFoundMiddleware)
 app.use(errorHandlerMiddleware)
+
+//production
+if(process.env.NODE_ENV === 'production') {
+
+    app.use(express.static(path.join(__dirname, '/client/build')))
+
+  app.get('*', (req, res) => res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html')))
+
+
+}else {
+
+    app.get('/', (req, res) => {
+        res.send('Welcome')
+    })
+}
 
 
 
