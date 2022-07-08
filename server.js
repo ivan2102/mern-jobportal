@@ -1,3 +1,4 @@
+import path from 'path';
 import express from 'express';
 import errorHandlerMiddleware from './middleware/error-handler.js';
 import notFoundMiddleware from './middleware/not-found.js';
