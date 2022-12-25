@@ -46,8 +46,8 @@ const Wrapper = styled.article`
     
   }
   .interview {
-    background: #f67e7d;
-    color: #647acb;
+    background: #D1193E;
+    
   }
   .waiting {
     color: #d66a6a;
